@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Post Test with v-model</title>
+</head>
+<body>
+  <div id="app">
+    <input type="text" v-model="name"/>
+    <button @click="click">Click</button>
+    <div>
+    <component :is="currentView"></component>
+    </div>
+  </div>
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.5.0/vue-resource.js"></script>
+  
+  <script>
+  Vue.http.options.emulateJSON = true; // Send as 
+  new Vue({
+    el: '#app',
+    data : {
+        currentView : null,
+        name : ""
+    },
+    methods: {
+      click: function() {
+        this.$http.post('/api/test', {name:this.name}).then(function(response){
+          var result = response.data;
+          //this.postResults.push(result.name);
+          if (result.name == "1234")
+          {
+            var temp = getTemplate1();
+            var comp = Vue.component('Template1', {
+              template : temp
+            });
+            this.currentView = comp;
+          } 
+          else 
+          {
+            var temp = getTemplate2();
+            var comp = Vue.component('Template2', {
+              template : temp
+            });
+            this.currentView = comp;
+          }
+        }, function(response){
+          // Error Handling
+        });
+      }
+    }
+  });
+
+  function getTemplate1(){
+    return "<div></div>"
+  }
+  function getTemplate2(){
+    return "<div> Wrong Password </div>"
+  }
+
+  </script>
+</body>
+</html>
