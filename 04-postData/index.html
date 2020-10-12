@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Post Test</title>
+</head>
+<body>
+  
+  <div id="app">
+    <button @click="increment">Push AI (from server)</button>
+    <button @click="decrement">Pop AI (client side)</button>
+    <div>
+    {{ postResults }}
+    </div>
+  </div>
+  
+  
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.5.0/vue-resource.js"></script>
+<script>
+Vue.http.options.emulateJSON = true; // send as 
+new Vue({
+    el: '#app',
+    data: {
+        postResults: [],
+        number :0
+    },
+    methods: {
+      increment: function() {
+        this.$http.post('/api/test', {domain:this.domain}).then(function(response){
+          //Success
+          var result = response.data;
+
+          this.postResults.push(result.name);
+
+        }, function(response){
+          //Error Handling
+
+        });
+        
+      },
+    decrement: function() {
+      this.postResults.pop();
+    }
+    }
+});
+</script>
+ 
+</body>
+</html>
